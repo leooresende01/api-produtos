@@ -37,4 +37,4 @@ build/
 target/
 .classpath
 .project
-application.properties
+./src/main/resources/application.properties
