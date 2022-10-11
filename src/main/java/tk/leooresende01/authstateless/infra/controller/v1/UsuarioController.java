@@ -59,7 +59,6 @@ public class UsuarioController {
 	}
 	
 	@GetMapping("/{username}")
-	@Transactional
 	public ResponseEntity<UsuarioDto> buscarUsuarioPeloUsername(@PathVariable String username) {
 		UsuarioDto usuarioDto = this.service.buscarUsuarioPeloUsername(username);
 		return ResponseEntity.ok(usuarioDto);

@@ -44,16 +44,21 @@ public class UsuarioUtil {
 
 	@SuppressWarnings("deprecation")
 	private static void verificaSeOUsuarioFormEhValido(UsuarioForm usuarioForm) {
-		boolean ehNulo = usuarioForm.getUsername() == null || usuarioForm.getPassword() == null || usuarioForm.getIdade() == null;
-		boolean ehBlank = usuarioForm.getUsername().isBlank() || usuarioForm.getPassword().toString().isBlank() || usuarioForm.getIdade().toString().isBlank();
-		if (ehNulo || ehBlank) {
+		boolean ehNulo = usuarioForm.getUsername() == null || usuarioForm.getPassword() == null
+				|| usuarioForm.getIdade() == null;
+		if (ehNulo)
 			throw new HttpMessageNotReadableException("Formulario invalido!");
-		}
+
+		boolean ehBlank = usuarioForm.getUsername().isBlank() || usuarioForm.getPassword().toString().isBlank()
+				|| usuarioForm.getIdade().toString().isBlank();
+		if (ehBlank)
+			throw new HttpMessageNotReadableException("Formulario invalido!");
 	}
-	
+
 	private static void verificaQuantidadeDeCaracteres(Integer quantidade) {
 		if (quantidade > 20 || quantidade < 8) {
-			throw new UsernameOrPasswordInvalidException("O usuario e senha devem ter no minimo 8 caracteres e no maximo 20");
+			throw new UsernameOrPasswordInvalidException(
+					"O usuario e senha devem ter no minimo 8 caracteres e no maximo 20");
 		}
 	}
 

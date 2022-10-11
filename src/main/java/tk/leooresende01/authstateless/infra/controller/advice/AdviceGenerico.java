@@ -50,5 +50,5 @@ public class AdviceGenerico {
 	public ResponseEntity<ErroDto> tratandoErroDeMetodoHTTPNaoSuportado() {
 		return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(
 				new ErroDto("Esse metodo HTTP não é suportado por essa rota", HttpStatus.METHOD_NOT_ALLOWED.value()));
-	}
+	} 
 }

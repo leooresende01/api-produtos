@@ -33,7 +33,7 @@ public class UsuarioService {
 		UsuarioUtil.validarFormularioDeUsuario(usuarioForm);
 		Usuario usuario = usuarioForm.mapearParaUsuario();
 		this.verificarUsername(usuarioForm);
-		return this.salvarUsuarioNoDBEPegarDTO(usuario);
+		return this.hashearSenhaSalvarEPegarDTO(usuario);
 	}
 
 	public UsuarioDto atualizarUsuario(UsuarioForm usuarioForm, String username) {
@@ -42,7 +42,7 @@ public class UsuarioService {
 		Usuario usuario = this.buscarPeloUsernameNoDB(username);
 		this.verificaSeOUsernameNaoMudou(usuarioForm);
 		Usuario usuarioAtualizado = usuarioForm.atualizarUsuario(usuario);
-		return this.salvarUsuarioNoDBEPegarDTO(usuarioAtualizado);
+		return this.hashearSenhaSalvarEPegarDTO(usuarioAtualizado);
 	}
 
 	public void deletarUsuario(String username) {
@@ -66,9 +66,13 @@ public class UsuarioService {
 				.filter(produto -> produto.getId() == Integer.valueOf(idDoProduto)).findFirst().get();
 		return new ProdutoDto(produtoDoUsuario);
 	}
-
-	public UsuarioDto salvarUsuarioNoDBEPegarDTO(Usuario usuario) {
+	
+	public UsuarioDto hashearSenhaSalvarEPegarDTO(Usuario usuario) {
 		this.hashearSenha(usuario);
+		return this.salvarUsuarioNoDBEPegarDTO(usuario);
+	}
+	
+	public UsuarioDto salvarUsuarioNoDBEPegarDTO(Usuario usuario) {
 		Usuario usuarioSalvo = this.userRepo.save(usuario);
 		return new UsuarioDto(usuarioSalvo);
 	}

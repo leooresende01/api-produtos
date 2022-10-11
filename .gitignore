@@ -37,4 +37,6 @@ build/
 target/
 .classpath
 .project
-src/main/resources/application.properties
+application.properties
+baeldung.jks
+baeldung.p12
