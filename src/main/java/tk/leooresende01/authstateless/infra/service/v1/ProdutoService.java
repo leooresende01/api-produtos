@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import tk.leooresende01.authstateless.infra.controller.v1.dto.ProdutoDto;
 import tk.leooresende01.authstateless.infra.repository.v1.ProdutoRepository;
 import tk.leooresende01.authstateless.infra.util.ProdutoUtil;
+import tk.leooresende01.authstateless.infra.util.UsuarioUtil;
 import tk.leooresende01.authstateless.model.Produto;
 import tk.leooresende01.authstateless.model.Usuario;
 
@@ -31,7 +32,6 @@ public class ProdutoService {
 
 		Usuario usuario = this.userService.pegarUsuarioAutenticado();
 		produto.setDonoDoProduto(usuario);
-		usuario.getProdutos().add(produto);
 
 		Produto produtoSalvo = this.produtoRepo.save(produto);
 		this.userService.salvarUsuarioNoDBEPegarDTO(usuario);

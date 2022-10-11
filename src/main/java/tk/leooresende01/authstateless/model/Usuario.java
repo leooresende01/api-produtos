@@ -28,7 +28,7 @@ public class Usuario implements UserDetails {
 	private String password;
 	private Integer idade;
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<Roles> roles;
+	private List<Roles> roles = new ArrayList<>();
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "donoDoProduto")
 	private List<Produto> produtos = new ArrayList<>();
 

@@ -47,7 +47,7 @@ public class UsuarioForm {
 	}
 	
 	public Usuario mapearParaUsuario() {
-		Roles roleDefault = new Roles(UsuarioForm.ROLE_DEFAULT);
+		Roles roleDefault = new Roles(UsuarioForm.ROLE_DEFAULT, this.username);
 		List<Roles> listaDeRoles = new ArrayList<>(List.of(roleDefault));
 		return new Usuario(this.username, this.password, this.idade, listaDeRoles);
 	}

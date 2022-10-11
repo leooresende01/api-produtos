@@ -17,29 +17,14 @@ public class Roles implements GrantedAuthority {
 	private Long id;
 	@Enumerated(EnumType.STRING)
 	private Role role;
-	private Long userId;
+	private String username;
 
 	public Roles() {
 	}
 
-	public Roles(Role role) {
+	public Roles(Role role, String username) {
 		this.role = role;
-	}
-
-	public Long getUsername() {
-		return id;
-	}
-
-	public void setUsername(Long username) {
-		this.id = username;
-	}
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
+		this.username = username;
 	}
 
 	@Override
@@ -55,19 +40,16 @@ public class Roles implements GrantedAuthority {
 		this.id = id;
 	}
 
-	public Long getUserId() {
-		return userId;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj.equals(this.role))
-			return true;
-		return false;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 }

@@ -8,12 +8,10 @@ public class ProdutoUtil {
 
 	@SuppressWarnings("deprecation")
 	public static void verificaSeOProdutoFormEhValido(ProdutoDto produtoDto) {
-		if (produtoDto.getNome() == null || produtoDto.getPreco() == null || produtoDto.getTipo() == null) {
-			throw new HttpMessageNotReadableException("");
-		}
-		
-		if (produtoDto.getNome().isBlank() || produtoDto.getPreco().toString().isBlank() || produtoDto.getTipo().toString().isBlank()) {
-			throw new HttpMessageNotReadableException("");
+		boolean isNull = produtoDto.getNome() == null || produtoDto.getPreco() == null || produtoDto.getTipo() == null;
+		boolean isBlank = produtoDto.getNome().isBlank() || produtoDto.getPreco().toString().isBlank() || produtoDto.getTipo().toString().isBlank();
+		if (isNull || isBlank) {
+			throw new HttpMessageNotReadableException("Formulario invalido");
 		}
 	}
 

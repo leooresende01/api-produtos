@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import tk.leooresende01.authstateless.infra.controller.advice.exception.ForbiddenException;
+import tk.leooresende01.authstateless.infra.controller.advice.exception.UsernameOrPasswordInvalidException;
 import tk.leooresende01.authstateless.infra.controller.advice.exception.UsuarioJaExisteException;
 
 @RestControllerAdvice
@@ -31,28 +32,23 @@ public class AdviceGenerico {
 			return ResponseEntity.internalServerError().build();
 	}
 
-	@ExceptionHandler(value = HttpMessageNotReadableException.class)
-	public ResponseEntity<ErroDto> tratandoErroDeFormularioInvalido() {
-		return ResponseEntity.badRequest()
-				.body(new ErroDto("Formulario invalido!", HttpStatus.BAD_REQUEST.value()));
-	}
-
 	@ExceptionHandler(value = ForbiddenException.class)
 	public ResponseEntity<ErroDto> tratandoErroDePermissaoDenied() {
 		return ResponseEntity.status(HttpStatus.FORBIDDEN)
 				.body(new ErroDto("Você não tem permissão de editar esse recurso", HttpStatus.FORBIDDEN.value()));
 	}
-	
-	@ExceptionHandler(value = UsuarioJaExisteException.class)
-	public ResponseEntity<ErroDto> tratandoErroDeUsuarioJaExisteException() {
+
+	@ExceptionHandler(value = { UsuarioJaExisteException.class, 
+			UsernameOrPasswordInvalidException.class,
+			HttpMessageNotReadableException.class })
+	public ResponseEntity<ErroDto> tratandoErroDeUsuarioJaExisteException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(new ErroDto("Esse nome de usuario já está sendo usado", HttpStatus.BAD_REQUEST.value()));
+				.body(new ErroDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
 	}
-	
-	
+
 	@ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
 	public ResponseEntity<ErroDto> tratandoErroDeMetodoHTTPNaoSuportado() {
-		return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
-				.body(new ErroDto("Esse metodo HTTP não é suportado por essa rota", HttpStatus.METHOD_NOT_ALLOWED.value()));
+		return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(
+				new ErroDto("Esse metodo HTTP não é suportado por essa rota", HttpStatus.METHOD_NOT_ALLOWED.value()));
 	}
 }

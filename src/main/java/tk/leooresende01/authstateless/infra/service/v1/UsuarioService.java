@@ -12,6 +12,7 @@ import tk.leooresende01.authstateless.infra.controller.v1.dto.ProdutoDto;
 import tk.leooresende01.authstateless.infra.controller.v1.dto.UsuarioDto;
 import tk.leooresende01.authstateless.infra.controller.v1.dto.UsuarioForm;
 import tk.leooresende01.authstateless.infra.repository.v1.UsuarioRepository;
+import tk.leooresende01.authstateless.infra.util.UsuarioUtil;
 import tk.leooresende01.authstateless.model.Produto;
 import tk.leooresende01.authstateless.model.Usuario;
 
@@ -29,15 +30,17 @@ public class UsuarioService {
 	}
 
 	public UsuarioDto salvarUsuarioNoDb(UsuarioForm usuarioForm) {
+		UsuarioUtil.validarFormularioDeUsuario(usuarioForm);
 		Usuario usuario = usuarioForm.mapearParaUsuario();
 		this.verificarUsername(usuarioForm);
 		return this.salvarUsuarioNoDBEPegarDTO(usuario);
 	}
 
 	public UsuarioDto atualizarUsuario(UsuarioForm usuarioForm, String username) {
+		UsuarioUtil.validarFormularioDeUsuario(usuarioForm);
 		this.verificarSeOUsuarioTemPemicoesDeEditar(username);
 		Usuario usuario = this.buscarPeloUsernameNoDB(username);
-		this.verificarUsername(usuarioForm);
+		this.verificaSeOUsernameNaoMudou(usuarioForm);
 		Usuario usuarioAtualizado = usuarioForm.atualizarUsuario(usuario);
 		return this.salvarUsuarioNoDBEPegarDTO(usuarioAtualizado);
 	}
@@ -89,6 +92,12 @@ public class UsuarioService {
 
 	private void verificarUsername(UsuarioForm usuarioForm) {
 		Optional<Usuario> optional = this.userRepo.findByUsername(usuarioForm.getUsername());
-		UsuarioUtil.verificaSeOUsuarioJaExiste(optional);
+		UsuarioUtil.verificaSeOUsernameJaEstaSendoUsado(optional);
+	}
+
+	private void verificaSeOUsernameNaoMudou(UsuarioForm usuarioForm) {
+		Usuario usuarioAutenticado = this.pegarUsuarioAutenticado();
+		if (!usuarioForm.getUsername().equals(usuarioAutenticado.getUsername()))
+			this.verificarUsername(usuarioForm);
 	}
 }
