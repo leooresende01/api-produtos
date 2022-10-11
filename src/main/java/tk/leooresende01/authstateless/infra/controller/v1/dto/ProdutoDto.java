@@ -5,11 +5,13 @@ import java.util.List;
 
 import tk.leooresende01.authstateless.model.Produto;
 import tk.leooresende01.authstateless.model.TipoDoProduto;
+import tk.leooresende01.authstateless.model.Usuario;
 
 public class ProdutoDto {
 	private Integer id;
 	private String nome;
 	private BigDecimal preco;
+	private String donoDoProduto;
 	private TipoDoProduto tipo;
 
 	public ProdutoDto() {
@@ -20,17 +22,27 @@ public class ProdutoDto {
 		this.preco = produto.getPreco();
 		this.tipo = produto.getTipo();
 		this.setId(produto.getId());
+		this.donoDoProduto = produto.getDonoDoProduto().getUsername();
 	}
 
-	public ProdutoDto(String nome, BigDecimal preco, TipoDoProduto tipo, Integer id) {
+	public ProdutoDto(String nome, BigDecimal preco, TipoDoProduto tipo, Integer id, Usuario donoDoProduto) {
 		this.nome = nome;
 		this.preco = preco;
 		this.tipo = tipo;
+		this.donoDoProduto = donoDoProduto.getUsername();
 		this.setId(id);
 	}
 
 	public String getNome() {
 		return nome;
+	}
+
+	public String getDonoDoProduto() {
+		return donoDoProduto;
+	}
+
+	public void setDonoDoProduto(String donoDoProduto) {
+		this.donoDoProduto = donoDoProduto;
 	}
 
 	public void setNome(String nome) {
@@ -53,7 +65,6 @@ public class ProdutoDto {
 		this.tipo = tipo;
 	}
 
-
 	public Integer getId() {
 		return id;
 	}
@@ -61,14 +72,13 @@ public class ProdutoDto {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	public Produto mapearParaProduto() {
 		return new Produto(this.nome, this.preco, this.tipo);
 	}
-	
+
 	public static List<ProdutoDto> mapearListaDeProdutoParaDto(List<Produto> listaDeProdutos) {
-		return listaDeProdutos.stream()
-				.map(ProdutoDto::new).toList();
+		return listaDeProdutos.stream().map(ProdutoDto::new).toList();
 	}
 
 	public Produto atualizarProduto(Produto produto) {

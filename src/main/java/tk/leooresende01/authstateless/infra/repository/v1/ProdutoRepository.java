@@ -1,4 +1,4 @@
-package tk.leooresende01.authstateless.infra.repository;
+package tk.leooresende01.authstateless.infra.repository.v1;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

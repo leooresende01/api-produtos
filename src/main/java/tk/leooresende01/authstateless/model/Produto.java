@@ -3,9 +3,12 @@ package tk.leooresende01.authstateless.model;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,6 +19,9 @@ public class Produto {
 	private Integer id;
 	private String nome;
 	private BigDecimal preco;
+	@ManyToOne
+	private Usuario donoDoProduto;
+	@Enumerated(EnumType.STRING)
 	private TipoDoProduto tipo;
 
 	public Produto(String nome, BigDecimal preco, TipoDoProduto tipo) {
@@ -57,6 +63,14 @@ public class Produto {
 
 	public void setTipo(TipoDoProduto tipo) {
 		this.tipo = tipo;
+	}
+
+	public Usuario getDonoDoProduto() {
+		return donoDoProduto;
+	}
+
+	public void setDonoDoProduto(Usuario donoDoProduto) {
+		this.donoDoProduto = donoDoProduto;
 	}
 
 }
