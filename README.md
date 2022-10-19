@@ -1,7 +1,7 @@
 # API-Produtos
 
 
-## API para que usuarios possam registrar, deletar, atualizar e ver produtos registrados
+## API para que usuarios possam registrar, deletar, atualizar e ver produtos registrados, além de poder fazer ofertas a produtos de outros usuários
 ---
 ## Documentações:
 
