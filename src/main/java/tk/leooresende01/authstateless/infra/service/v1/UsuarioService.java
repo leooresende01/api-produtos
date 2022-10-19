@@ -4,15 +4,16 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import tk.leooresende01.authstateless.infra.controller.v1.dto.OfertaDto;
 import tk.leooresende01.authstateless.infra.controller.v1.dto.ProdutoDto;
 import tk.leooresende01.authstateless.infra.controller.v1.dto.UsuarioDto;
 import tk.leooresende01.authstateless.infra.controller.v1.dto.UsuarioForm;
 import tk.leooresende01.authstateless.infra.repository.v1.UsuarioRepository;
 import tk.leooresende01.authstateless.infra.util.UsuarioUtil;
+import tk.leooresende01.authstateless.model.Oferta;
 import tk.leooresende01.authstateless.model.Produto;
 import tk.leooresende01.authstateless.model.Usuario;
 
@@ -38,7 +39,7 @@ public class UsuarioService {
 
 	public UsuarioDto atualizarUsuario(UsuarioForm usuarioForm, String username) {
 		UsuarioUtil.validarFormularioDeUsuario(usuarioForm);
-		this.verificarSeOUsuarioTemPemicoesDeEditar(username);
+		UsuarioUtil.verificarSeOUsuarioTemPemicoesDeEditar(username);
 		Usuario usuario = this.buscarPeloUsernameNoDB(username);
 		this.verificaSeOUsernameNaoMudou(usuarioForm);
 		Usuario usuarioAtualizado = usuarioForm.atualizarUsuario(usuario);
@@ -46,7 +47,7 @@ public class UsuarioService {
 	}
 
 	public void deletarUsuario(String username) {
-		this.verificarSeOUsuarioTemPemicoesDeEditar(username);
+		UsuarioUtil.verificarSeOUsuarioTemPemicoesDeEditar(username);
 		this.userRepo.deleteByUsername(username);
 	}
 
@@ -67,6 +68,13 @@ public class UsuarioService {
 		return new ProdutoDto(produtoDoUsuario);
 	}
 	
+	public List<OfertaDto> buscarOfertasDoUsuario(String username) {
+		UsuarioUtil.verificarSeOUsuarioTemPemicoesDeEditar(username);
+		Usuario usuario = this.buscarPeloUsernameNoDB(username);
+		List<Oferta> ofertas = usuario.getOfertas();
+		return OfertaDto.mapearListaDeOfertaParaDto(ofertas);
+	}
+	
 	public UsuarioDto hashearSenhaSalvarEPegarDTO(Usuario usuario) {
 		this.hashearSenha(usuario);
 		return this.salvarUsuarioNoDBEPegarDTO(usuario);
@@ -80,18 +88,10 @@ public class UsuarioService {
 	private Usuario buscarPeloUsernameNoDB(String username) {
 		return this.userRepo.findByUsername(username).get();
 	}
+	
 
 	private void hashearSenha(Usuario usuario) {
 		usuario.setPassword(passEncoder.encode(usuario.getPassword()));
-	}
-
-	public Usuario pegarUsuarioAutenticado() {
-		return (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	}
-
-	private void verificarSeOUsuarioTemPemicoesDeEditar(String username) {
-		Usuario usuarioAutenticado = this.pegarUsuarioAutenticado();
-		UsuarioUtil.verificaSeElePodeEditarEsseRecurso(username, usuarioAutenticado);
 	}
 
 	private void verificarUsername(UsuarioForm usuarioForm) {
@@ -100,8 +100,9 @@ public class UsuarioService {
 	}
 
 	private void verificaSeOUsernameNaoMudou(UsuarioForm usuarioForm) {
-		Usuario usuarioAutenticado = this.pegarUsuarioAutenticado();
+		Usuario usuarioAutenticado = UsuarioUtil.pegarUsuarioAutenticado();
 		if (!usuarioForm.getUsername().equals(usuarioAutenticado.getUsername()))
 			this.verificarUsername(usuarioForm);
 	}
+
 }

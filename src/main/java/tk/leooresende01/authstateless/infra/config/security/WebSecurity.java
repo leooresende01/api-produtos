@@ -14,6 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import tk.leooresende01.authstateless.infra.config.filter.AuthenticationFilter;
 import tk.leooresende01.authstateless.infra.service.v1.LoginService;
@@ -27,6 +30,7 @@ public class WebSecurity {
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/login").permitAll();
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll();
 		http.authorizeRequests().anyRequest().authenticated();
+		http.cors();
 		http.csrf().disable();
 		http.formLogin().disable();
 		http.logout().disable();
@@ -45,5 +49,17 @@ public class WebSecurity {
 	@Bean
 	public PasswordEncoder getPassEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+	    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+	    CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+	    corsConfiguration.addAllowedMethod(HttpMethod.DELETE);
+	    corsConfiguration.addAllowedMethod(HttpMethod.PUT);
+	    source.registerCorsConfiguration("/**", corsConfiguration);
+
+	    return source;
 	}
 }

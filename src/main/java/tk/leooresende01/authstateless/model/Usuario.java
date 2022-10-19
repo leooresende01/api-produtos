@@ -10,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -27,10 +26,12 @@ public class Usuario implements UserDetails {
 	private String username;
 	private String password;
 	private Integer idade;
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Roles> roles = new ArrayList<>();
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "donoDoProduto")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "donoDoProduto", fetch = FetchType.LAZY)
 	private List<Produto> produtos = new ArrayList<>();
+	@OneToMany(mappedBy = "comprador", fetch = FetchType.LAZY)
+	private List<Oferta> ofertas = new ArrayList<>();
 
 	public Usuario() {
 	}
@@ -95,6 +96,14 @@ public class Usuario implements UserDetails {
 
 	public void setIdade(Integer idade) {
 		this.idade = idade;
+	}
+
+	public List<Oferta> getOfertas() {
+		return ofertas;
+	}
+
+	public void setOfertas(List<Oferta> ofertas) {
+		this.ofertas = ofertas;
 	}
 
 	@Override

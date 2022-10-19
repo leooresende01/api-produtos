@@ -13,6 +13,7 @@ public class ProdutoDto {
 	private BigDecimal preco;
 	private String donoDoProduto;
 	private TipoDoProduto tipo;
+	private Boolean vendido;
 
 	public ProdutoDto() {
 	}
@@ -23,6 +24,7 @@ public class ProdutoDto {
 		this.tipo = produto.getTipo();
 		this.setId(produto.getId());
 		this.donoDoProduto = produto.getDonoDoProduto().getUsername();
+		this.vendido = produto.getVendido();
 	}
 
 	public ProdutoDto(String nome, BigDecimal preco, TipoDoProduto tipo, Integer id, Usuario donoDoProduto) {
@@ -79,6 +81,14 @@ public class ProdutoDto {
 
 	public static List<ProdutoDto> mapearListaDeProdutoParaDto(List<Produto> listaDeProdutos) {
 		return listaDeProdutos.stream().map(ProdutoDto::new).toList();
+	}
+
+	public Boolean getVendido() {
+		return vendido;
+	}
+
+	public void setVendido(Boolean vendido) {
+		this.vendido = vendido;
 	}
 
 	public Produto atualizarProduto(Produto produto) {

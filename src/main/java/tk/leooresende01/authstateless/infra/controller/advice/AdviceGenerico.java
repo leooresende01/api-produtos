@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import tk.leooresende01.authstateless.infra.controller.advice.exception.ForbiddenException;
+import tk.leooresende01.authstateless.infra.controller.advice.exception.OfertaException;
+import tk.leooresende01.authstateless.infra.controller.advice.exception.ProdutoException;
 import tk.leooresende01.authstateless.infra.controller.advice.exception.UsernameOrPasswordInvalidException;
 import tk.leooresende01.authstateless.infra.controller.advice.exception.UsuarioJaExisteException;
 
@@ -34,13 +36,12 @@ public class AdviceGenerico {
 
 	@ExceptionHandler(value = ForbiddenException.class)
 	public ResponseEntity<ErroDto> tratandoErroDePermissaoDenied() {
-		return ResponseEntity.status(HttpStatus.FORBIDDEN)
-				.body(new ErroDto("Você não tem permissão de editar esse recurso", HttpStatus.FORBIDDEN.value()));
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErroDto(
+				"Você não tem permissão de acessar ou modificar esse recurso", HttpStatus.FORBIDDEN.value()));
 	}
 
-	@ExceptionHandler(value = { UsuarioJaExisteException.class, 
-			UsernameOrPasswordInvalidException.class,
-			HttpMessageNotReadableException.class })
+	@ExceptionHandler(value = { UsuarioJaExisteException.class, UsernameOrPasswordInvalidException.class,
+			HttpMessageNotReadableException.class, OfertaException.class, ProdutoException.class })
 	public ResponseEntity<ErroDto> tratandoErroDeUsuarioJaExisteException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new ErroDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
@@ -50,5 +51,5 @@ public class AdviceGenerico {
 	public ResponseEntity<ErroDto> tratandoErroDeMetodoHTTPNaoSuportado() {
 		return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(
 				new ErroDto("Esse metodo HTTP não é suportado por essa rota", HttpStatus.METHOD_NOT_ALLOWED.value()));
-	} 
+	}
 }

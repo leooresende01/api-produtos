@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import tk.leooresende01.authstateless.infra.controller.advice.exception.ForbiddenException;
 import tk.leooresende01.authstateless.infra.controller.advice.exception.UsernameOrPasswordInvalidException;
@@ -18,13 +19,18 @@ public class UsuarioUtil {
 		if (username.equals(usuarioAutenticado.getUsername())) {
 			return;
 		}
+		UsuarioUtil.verificarSeOUsuarioTemARole(usuarioAutenticado, Role.ROLE_ADMIN);
+	}
+
+	public static void verificarSeOUsuarioTemARole(Usuario usuarioAutenticado, Role role) {
 		try {
-			usuarioAutenticado.getAuthorities().stream().filter(roles -> roles.getAuthority() == Role.ROLE_ADMIN.name())
+			usuarioAutenticado.getAuthorities().stream().filter(roles -> roles.getAuthority() == role.name())
 					.findFirst().get();
 			return;
 		} catch (Exception ex) {
 		}
 		throw new ForbiddenException();
+
 	}
 
 	public static void verificaSeOUsernameJaEstaSendoUsado(Optional<Usuario> optional) {
@@ -61,5 +67,13 @@ public class UsuarioUtil {
 					"O usuario e senha devem ter no minimo 8 caracteres e no maximo 20");
 		}
 	}
-
+	
+	public static void verificarSeOUsuarioTemPemicoesDeEditar(String username) {
+		Usuario usuarioAutenticado = UsuarioUtil.pegarUsuarioAutenticado();
+		UsuarioUtil.verificaSeElePodeEditarEsseRecurso(username, usuarioAutenticado);
+	}
+	
+	public static Usuario pegarUsuarioAutenticado() {
+		return (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
 }

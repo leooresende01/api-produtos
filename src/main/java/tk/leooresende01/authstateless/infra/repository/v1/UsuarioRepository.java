@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import tk.leooresende01.authstateless.model.Usuario;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
 	Optional<Usuario> findByUsername(String username);
 	void deleteByUsername(String username);

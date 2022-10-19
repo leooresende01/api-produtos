@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import tk.leooresende01.authstateless.infra.controller.v1.dto.OfertaDto;
 import tk.leooresende01.authstateless.infra.controller.v1.dto.ProdutoDto;
 import tk.leooresende01.authstateless.infra.controller.v1.dto.UsuarioDto;
 import tk.leooresende01.authstateless.infra.controller.v1.dto.UsuarioForm;
@@ -75,4 +76,11 @@ public class UsuarioController {
 		ProdutoDto produtoDto = this.service.buscarProdutoDoUsuarioPeloId(username, idDoProduto);
 		return ResponseEntity.ok(produtoDto);
 	}
+	
+	@GetMapping("/{username}/ofertas")
+	public ResponseEntity<List<OfertaDto>> buscarOfertasDoUsuario(@PathVariable String username) {
+		List<OfertaDto> ofertasDoUsuario = this.service.buscarOfertasDoUsuario(username);
+		return ResponseEntity.ok(ofertasDoUsuario);
+	}
+	
 }
